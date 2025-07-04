@@ -202,6 +202,7 @@ def setup_system(
     ligand_1_ref_query: tuple[str, str, str] | None = None,
     ligand_2_ref_query: tuple[str, str, str] | None = None,
     extra_params: list[pathlib.Path] | None = None,
+    parameter_cache_file: pathlib.Path | None = None,
 ) -> tuple[mdtop.Topology, openmm.System]:
     """Prepares a system ready for running the ATM method.
 
@@ -217,6 +218,8 @@ def setup_system(
         ligand_2_ref_query: The query to select the second ligand reference atoms.
         extra_params: The paths to any extra parameter files (.xml, .parm) to use
             when parameterizing the system.
+        parameter_cache_file: The path to a file to use as a cache for the
+            OpenFF template generator.
 
     Returns:
         The prepared topology and OpenMM system object.
@@ -244,6 +247,7 @@ def setup_system(
         displacement,
         cavity_formers=cavity_formers,
         extra_params=extra_params,
+        parameter_cache_file=parameter_cache_file,
     )
 
     if config.apply_hmr:
