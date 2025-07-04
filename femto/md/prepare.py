@@ -209,6 +209,7 @@ def _register_openff_generator(
     cofactors: list[mdtop.Topology],
     force_field: openmm.app.ForceField,
     config: femto.md.config.Prepare,
+    parameter_cache_file: pathlib.Path | None = None,
 ):
     """Registers an OpenFF template generator with the force field, to use to
     parameterize ligands and cofactors."""
@@ -225,7 +226,7 @@ def _register_openff_generator(
     ]
 
     smirnoff = SMIRNOFFTemplateGenerator(
-        molecules=molecules, forcefield=config.default_ligand_ff
+        molecules=molecules, forcefield=config.default_ligand_ff, cache=parameter_cache_file
     ).generator
     force_field.registerTemplateGenerator(smirnoff)
 
@@ -272,6 +273,7 @@ def prepare_system(
     ligand_2_offset: openmm.unit.Quantity | None = None,
     cavity_formers: list[mdtop.Topology] | None = None,
     extra_params: list[pathlib.Path] | None = None,
+    parameter_cache_file: pathlib.Path | None = None,
 ) -> tuple[mdtop.Topology, openmm.System]:
     """Solvates and parameterizes a system.
 
@@ -288,10 +290,11 @@ def prepare_system(
         cavity_formers: A (optional) list of topologies that should be considered
             'present' when placing the solvent molecules such that they leave cavities,
             but are not added to the final topology themselves.
-
             Note that cavity formers will be considered when determining the box size.
         extra_params: The paths to any extra parameter files (.xml, .parm) to use
             when parameterizing the system.
+        parameter_cache_file: The path to a file to use as a cache for the
+            OpenFF template generator. 
 
     Returns:
         The solvated and parameterized topology and system, containing the ligands, the
@@ -307,7 +310,7 @@ def prepare_system(
     )
 
     if config.default_ligand_ff is not None:
-        _register_openff_generator(ligand_1, ligand_2, cofactors, force_field, config)
+        _register_openff_generator(ligand_1, ligand_2, cofactors, force_field, config, parameter_cache_file)
 
     topology = mdtop.Topology.merge(
         *([] if ligand_1 is None else [ligand_1]),

@@ -277,13 +277,10 @@ def setup_system(
             ligand_2_ref_query,
         )
         assert ligand_2_ref_idxs_0 is not None, "ligand 2 ref atoms were not selected"
-
         ligand_1_ref_idxs = [ligand_1_idxs[i] for i in ligand_1_ref_idxs_0]
         ligand_2_ref_idxs = [ligand_2_idxs[i] for i in ligand_2_ref_idxs_0]
-
         _LOGGER.info(f"ligand 1 ref idxs={ligand_1_idxs}")
         _LOGGER.info(f"ligand 2 ref idxs={ligand_2_idxs}")
-
     receptor_start_idx = ligand_1.n_atoms + (
         0 if ligand_2 is None else ligand_2.n_atoms
     )
