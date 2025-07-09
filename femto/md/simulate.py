@@ -122,8 +122,7 @@ def simulate_state(
         simulation = _prepare_simulation(
             system, topology, state, coords, stage, platform
         )
-        plat = simulation.context.getPlatform()
-        print("Running on OpenMM platform:", plat.getName(), "precision=", plat.getPropertyValue(simulation.context, "Precision"))
+        
         simulation.reporters.append(reporter)
 
         if isinstance(stage, femto.md.config.Minimization):
