@@ -71,6 +71,7 @@ def _prepare_simulation(
     simulation = femto.md.utils.openmm.create_simulation(
         system, topology, coords, integrator, state, platform
     )
+    _LOGGER.info('Running simulation with platform "%s"', platform.name)
     return simulation
 
 
